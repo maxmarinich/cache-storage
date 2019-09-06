@@ -1,12 +1,14 @@
-import { Data, Options } from './types';
-import { cache } from './instance';
+import { Data, Options } from "./types";
+import instance from "./instance";
 
 let options = {};
 
-const configure = (params: Options) => {
-  options = params || {};
+const configure = (props: Options): void => {
+  options = { ...props };
 };
 
-const restCache = (data: Data) => cache(data, options);
+const cacheStorage = (data: Data) => {
+  return instance(data, options);
+};
 
-export { restCache as default, configure };
+export { cacheStorage as default, configure };

@@ -1,32 +1,35 @@
-import { Data, Options } from '../types';
-import { getHash, getExpire, isExpired } from '../services';
+import { NAMESPACE } from "../constants";
+import { Data, Options } from "../types";
+import { parse, createKey, createExpirationDate, isExpired } from "../services";
 
-export const cache = async (data: Data, options: Options): Promise<any> => {
-  const { onSave, onReceive, onInvalidate } = options;
-  const hash = getHash(data);
+export default async (data: Data, options: Options): Promise<any> => {
+  const key = createKey(data);
+  const { onSave, onReceive, onInvalidate, logger, responseParser } = options;
 
   try {
-    const result = onReceive && (await onReceive(hash));
+    const value = onReceive && (await onReceive(key));
+    const invalidate = data.invalidate || (value && isExpired(value.expire));
 
-    if (isExpired(result.expires) || data.invalidate) {
-      onInvalidate && (await onInvalidate(hash));
-      console.debug(`Cache-storage: cache is invalidated -> ${hash}`);
+    if (invalidate) {
+      onInvalidate && (await onInvalidate(key));
+      logger && logger(`${NAMESPACE} -> cache is invalidated: ${key}`);
     }
 
-    if (result) {
-      console.debug(`Cache-storage: retrieved from cache -> ${result}`);
+    if (value) {
+      logger && logger(`${NAMESPACE} -> retrieved from cache: ${value}`);
 
-      return { data: result.data };
+      return value;
     }
   } catch (e) {
-    console.error(`Cache-storage: error -> ${e.message}`);
+    logger && logger(`${NAMESPACE} -> error: ${e.message}`);
   }
 
-  const { method, params = [], expire = 0 } = data;
-  const response = (await method(...params)) || {};
-  const value = { data: response.data, expire: getExpire(expire) };
+  const { method, params = [], expire } = data;
+  const response = await method(...params);
+  const responseParsed = parse(response, responseParser);
+  const value = { data: responseParsed, expire: createExpirationDate(expire) };
 
-  onSave && (await onSave(hash, value));
+  onSave && (await onSave(key, value));
 
-  return { data: response.data };
+  return responseParsed;
 };
