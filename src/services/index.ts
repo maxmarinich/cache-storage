@@ -1,7 +1,7 @@
-import { Data } from "../types";
+import { Data } from '../types';
 
 const getKey = (key?: string, method?: Function) => {
-  return key || (method && method.name) || "";
+  return key || (method && method.name) || '';
 };
 
 export const isExpired = (expire: number): boolean => {
@@ -19,12 +19,14 @@ export const createExpirationDate = (expire: number = 0): number => {
 };
 
 export const parse = (response: any, cb?: Function): any => {
-  return (cb && cb(response)) || response;
+  if (cb) return cb(response);
+
+  return response;
 };
 
 export const generateHash = (data: any): number => {
   let hash = 0;
-  const string = JSON.stringify(data) || "";
+  const string = JSON.stringify(data) || '';
 
   if (string.length) {
     let i, l, char;

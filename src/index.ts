@@ -1,5 +1,5 @@
-import { Data, Options } from "./types";
-import instance from "./instance";
+import { Data, Options } from './types';
+import instance from './instance';
 
 let options = {};
 

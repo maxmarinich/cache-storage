@@ -1,6 +1,6 @@
-import { NAMESPACE } from "../constants";
-import { Data, Options } from "../types";
-import { parse, createKey, createExpirationDate, isExpired } from "../services";
+import { NAMESPACE } from '../constants';
+import { Data, Options } from '../types';
+import { parse, createKey, createExpirationDate, isExpired } from '../services';
 
 export default async (data: Data, options: Options): Promise<any> => {
   const key = createKey(data);
@@ -8,17 +8,18 @@ export default async (data: Data, options: Options): Promise<any> => {
 
   try {
     const value = onReceive && (await onReceive(key));
-    const invalidate = data.invalidate || (value && isExpired(value.expire));
-
-    if (invalidate) {
-      onInvalidate && (await onInvalidate(key));
-      logger && logger(`${NAMESPACE} -> cache is invalidated: ${key}`);
-    }
 
     if (value) {
-      logger && logger(`${NAMESPACE} -> retrieved from cache: ${value}`);
+      const invalidate = data.invalidate || (value && isExpired(value.expire));
 
-      return value;
+      if (invalidate) {
+        onInvalidate && (await onInvalidate(key));
+        logger && logger(`${NAMESPACE} -> cache is invalidated: ${key}`);
+      } else {
+        logger && logger(...[NAMESPACE, `(${key}) -> retrieved from cache:`, value]);
+
+        return value;
+      }
     }
   } catch (e) {
     logger && logger(`${NAMESPACE} -> error: ${e.message}`);
@@ -31,5 +32,5 @@ export default async (data: Data, options: Options): Promise<any> => {
 
   onSave && (await onSave(key, value));
 
-  return responseParsed;
+  return value;
 };
