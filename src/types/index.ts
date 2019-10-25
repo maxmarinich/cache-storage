@@ -2,8 +2,8 @@ export interface Options {
   onSave?: (key: string, value: any) => any;
   onReceive?: (key: string) => any;
   onInvalidate?: (key: string) => any;
-  logger?: Function;
-  responseParser?: Function;
+  logger?: (message: string) => any;
+  responseParser?: (response: any) => any;
 }
 
 export interface Data {

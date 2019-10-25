@@ -1,6 +1,6 @@
-import { NAMESPACE } from "../constants";
-import { Data, Options } from "../types";
-import { parse, createKey, createExpirationDate, isExpired } from "../services";
+import { NAMESPACE } from '../constants';
+import { Data, Options } from '../types';
+import { parse, createKey, createExpirationDate, isExpired } from '../services';
 
 export default async (data: Data, options: Options): Promise<any> => {
   const key = createKey(data);
