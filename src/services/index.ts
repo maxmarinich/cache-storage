@@ -19,7 +19,9 @@ export const createExpirationDate = (expire: number = 0): number => {
 };
 
 export const parse = (response: any, cb?: Function): any => {
-  return (cb && cb(response)) || response;
+  if (cb) return cb(response);
+
+  return response;
 };
 
 export const generateHash = (data: any): number => {

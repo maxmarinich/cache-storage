@@ -1,1 +1,1 @@
-export const NAMESPACE = "Cache-storage";
+export const NAMESPACE = 'Cache-storage';
