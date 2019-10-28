@@ -6,7 +6,7 @@ export interface Options {
   logger?: Function;
 }
 
-export interface Data {
+export interface Parameters {
   method: Function;
   params?: Array<any>;
   key?: string;

@@ -1,7 +1,7 @@
-import { Data } from '../types';
+import { Parameters } from '../types';
 
-const getKey = (data: Data) => {
-  const { key, method } = data;
+const getKey = (parameters: Parameters) => {
+  const { key, method } = parameters;
 
   return key || (method && method.name) || '';
 };
@@ -10,8 +10,8 @@ export const isExpired = (expire: number = 0): boolean => {
   return Date.now() > expire;
 };
 
-export const createKey = (data: Data): string => {
-  return `${getKey(data)}#${generateHash(data.params)}`;
+export const createKey = (parameters: Parameters): string => {
+  return `${getKey(parameters)}#${generateHash(parameters.params)}`;
 };
 
 export const createExpirationDate = (expire: number = 0): number => {
@@ -24,9 +24,9 @@ export const parse = (response: any, cb?: Function): any => {
   return response;
 };
 
-export const generateHash = (data: any): number => {
+export const generateHash = (params: any): number => {
   let hash = 0;
-  const string = JSON.stringify(data) || '';
+  const string = JSON.stringify(params) || '';
 
   if (string.length) {
     let i, l, char;

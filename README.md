@@ -5,11 +5,12 @@ Storage based cache service
 ### API
 
 - `configure(options: ConfigureOptions): void` - set initial options for the instance
+- `ms(parameters: Parameters): Result` - memo storage instance
 
 ### Types
 
 ```typescript
-type Data {
+type Parameters {
   method: Function; // method the results of which will be cached
   params?: Array<any>; // list of method arguments
   key?: string; // default method name
@@ -18,11 +19,11 @@ type Data {
 }
 
 type ConfigureOptions = {
-  onSave?: (key: string, value: any) => any;
-  onReceive?: (key: string) => any;
-  onInvalidate?: (key: string) => any;
-  responseParser?: (response: any) => any;
   logger?: Function;
+  onSave?: (key: string, value: any) => any; // handle on set the data in the storage
+  onReceive?: (key: string) => any; // handle on receive the data from the storage
+  onInvalidate?: (key: string) => any; // handle on delete the data from the storage
+  responseParser?: (response: any) => any; // // process the result returned by the method from the passed parameters
 };
 
 type Result {
@@ -33,6 +34,10 @@ type Result {
 ```
 
 ### Quick start
+
+```
+npm install memo-storage
+```
 
 ```js
 // storage.js
