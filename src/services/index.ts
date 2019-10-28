@@ -6,7 +6,7 @@ const getKey = (data: Data) => {
   return key || (method && method.name) || '';
 };
 
-export const isExpired = (expire: number): boolean => {
+export const isExpired = (expire: number = 0): boolean => {
   return Date.now() > expire;
 };
 

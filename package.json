@@ -1,5 +1,5 @@
 {
-  "name": "cache-storage",
+  "name": "memo-storage",
   "version": "0.1.0",
   "description": "Storage based cache service",
   "main": "lib/index.js",
@@ -15,12 +15,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/maxmarinich/cache-storage.git"
+    "url": "git+https://github.com/maxmarinich/memo-storage.git"
   },
   "keywords": [
     "cache",
+    "cache-service",
     "cache-storage",
-    "rest-cache"
+    "memo-storage"
   ],
   "author": "Max Marinich",
   "maintainers": [
@@ -31,9 +32,9 @@
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/maxmarinich/cache-storage/issues"
+    "url": "https://github.com/maxmarinich/memo-storage/issues"
   },
-  "homepage": "https://github.com/maxmarinich/cache-storage#readme",
+  "homepage": "https://github.com/maxmarinich/memo-storage#readme",
   "devDependencies": {
     "@babel/cli": "^7.5.5",
     "@babel/core": "^7.5.5",

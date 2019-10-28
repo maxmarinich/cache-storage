@@ -1,8 +1,8 @@
 import { NAMESPACE } from '../constants';
-import { Data, Options } from '../types';
+import { Data, Options, Result } from '../types';
 import { parse, createKey, createExpirationDate, isExpired } from '../services';
 
-export default async (data: Data, options: Options): Promise<any> => {
+export default async (data: Data, options: Options): Promise<Result> => {
   const key = createKey(data);
   const { onSave, onReceive, onInvalidate, logger, responseParser } = options;
 
@@ -11,12 +11,11 @@ export default async (data: Data, options: Options): Promise<any> => {
     const invalidate = data.invalidate || (value && isExpired(value.expire));
 
     if (invalidate) {
-      onInvalidate && (await onInvalidate(key));
       logger && logger(`${NAMESPACE} -> cache is invalidated: ${key}`);
-    }
 
-    if (value) {
-      logger && logger(`${NAMESPACE} -> retrieved from cache: ${value}`);
+      onInvalidate && (await onInvalidate(key));
+    } else if (value) {
+      logger && logger(`${NAMESPACE} -> retrieved from cache ${key}: `, value);
 
       return value;
     }
@@ -25,11 +24,12 @@ export default async (data: Data, options: Options): Promise<any> => {
   }
 
   const { method, params = [], expire } = data;
+
   const response = await method(...params);
   const responseParsed = parse(response, responseParser);
   const value = { data: responseParsed, expire: createExpirationDate(expire) };
 
   onSave && (await onSave(key, value));
 
-  return responseParsed;
+  return value;
 };

@@ -1,4 +1,4 @@
-# cache-storage
+# memo-storage
 
 Storage based cache service
 
@@ -9,8 +9,8 @@ Storage based cache service
 ### Types
 
 ```typescript
-type InstanceData {
-  method: Promise<any>; // method the results of which will be cached
+type Data {
+  method: Function; // method the results of which will be cached
   params?: Array<any>; // list of method arguments
   key?: string; // default method name
   expire?: number; // time in milliseconds after which the cache will be cleared
@@ -21,9 +21,15 @@ type ConfigureOptions = {
   onSave?: (key: string, value: any) => any;
   onReceive?: (key: string) => any;
   onInvalidate?: (key: string) => any;
-  logger?: (message: string) => any;
   responseParser?: (response: any) => any;
+  logger?: Function;
 };
+
+type Result {
+  data: any;
+  expire: number;
+}
+
 ```
 
 ### Quick start
@@ -48,7 +54,7 @@ export default {
 ```js
 // example.js
 import Storage from 'storage';
-import cache, { configure } from 'cache-storage';
+import ms, { configure } from 'memo-storage';
 
 configure({
   onSave: Storage.set,
@@ -56,13 +62,13 @@ configure({
   onInvalidate: Storage.remove,
 });
 
-const foo = value =>
-  cache({
-    method: Promise.resolve,
-    params: [value],
-    expire: 10000,
+const foo = params =>
+  ms({
+    method: v => Promise.resolve(v),
+    params: [params],
+    expire: 1000,
   });
 
-foo(1).then(console.log); // 1 from promise
-foo(1).then(console.log); // 1 from cache
+foo(1).then(console.log); // { data: 1, expire: 1572288209544 } from promise
+foo(1).then(console.log); // { data: 1, expire: 1572288209544 } from cache
 ```
