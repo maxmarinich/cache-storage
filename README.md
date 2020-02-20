@@ -10,7 +10,7 @@ Storage based cache service
 ### Types
 
 ```typescript
-type Parameters {
+type Parameters = {
   method: Function; // method the results of which will be cached
   params?: Array<any>; // list of method arguments
   key?: string; // default method name
@@ -26,7 +26,7 @@ type ConfigureOptions = {
   responseParser?: (response: any) => any; // // process the result returned by the method from the passed parameters
 };
 
-type Result {
+type Result = {
   data: any;
   expire: number;
 }
